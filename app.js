@@ -17,7 +17,7 @@ app.use("/uploads", express.static(UPLOADS_DIR));
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
 
-app.use("/", appRouter);
+app.use("/api", appRouter);
 
 app.use('/',(req, res, next) => {
     res.status(404).json({

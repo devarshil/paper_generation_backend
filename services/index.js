@@ -5,7 +5,7 @@ class BaseService {
     constructor(reqBody, reqUser, reqQuery) {
         this.reqBody = reqBody;
         this.reqUser = reqUser;
-        this.reqQuery = this.reqQuery
+        this.reqQuery = reqQuery
     }
 
     is(role) {
