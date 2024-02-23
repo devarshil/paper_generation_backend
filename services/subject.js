@@ -23,26 +23,19 @@ class SubjectService extends BaseService {
         const startIndex = (page - 1) * limit;
 
         let query = { deleted_at: null };
+
         const semester = parseInt(this.reqQuery.semester);
         const standard = parseInt(this.reqQuery.standard);
 
-        if (semester) {
+        if (!isNaN(semester) || !isNaN(standard)) {
             query = {
                 deleted_at: null,
-                $or: [
-                    { sem: semester },
-                ],
+                $and: [
+                    !isNaN(semester) ? { sem: semester } : null,
+                    !isNaN(standard) ? { std: standard } : null,
+                ].filter(Boolean),
             };
         }
-        if (standard) {
-            query = {
-                deleted_at: null,
-                $or: [
-                    { std: standard },
-                ],
-            };
-        }
-
         const subjects = await SubjectModel.find(query)
             .skip(startIndex)
             .limit(limit);
