@@ -10,7 +10,7 @@ class SubjectService extends BaseService {
         //     throw new Error("Subject with that name already exist.");
         // }
 
-        const dbSub = new SubjectModel({...this.reqBody, icon: file.filename})
+        const dbSub = new SubjectModel({...this.reqBody, icon: file?.filename || ""})
 
         const subject = await dbSub.save();
 
