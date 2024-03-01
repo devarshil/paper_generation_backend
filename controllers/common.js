@@ -46,9 +46,16 @@ commonRouter.post('/verify-otp', handleException(async (req, res) => {
     }
 }));
 
+// commonRouter.get('/image_url/:file', (req, res) => {
+//     const fileName = req.params.file;
+//     const filePath = path.join(__dirname, '../assets/images' , fileName);
+
+//     res.sendFile(filePath);
+// });
+
 commonRouter.get('/image_url/:file', (req, res) => {
     const fileName = req.params.file;
-    const filePath = path.join(__dirname, '../assets/images' , fileName);
+    const filePath = path.join(__dirname, '/opt/render/project/assets/images/' , fileName);
 
     res.sendFile(filePath);
 });
