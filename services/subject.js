@@ -4,13 +4,13 @@ const SubjectModel = require('../models/subject')
 class SubjectService extends BaseService {
     async addSubject(file) {
 
-        const isExist = await SubjectModel.findOne({name: this.reqBody.name})
+        // const isExist = await SubjectModel.findOne({name: this.reqBody.name})
+        //
+        // if (isExist) {
+        //     throw new Error("Subject with that name already exist.");
+        // }
 
-        if (isExist) {
-            throw new Error("Subject with that name already exist.");
-        }
-
-        const dbSub = new SubjectModel({...this.reqBody, icon: file.filename})
+        const dbSub = new SubjectModel({...this.reqBody, icon: file?.filename || ""})
 
         const subject = await dbSub.save();
 
