@@ -46,6 +46,9 @@ const app = express();
 // // Set up static middleware for serving images
 // app.use("/uploads", express.static(path.join(__dirname, "assets/images")));
 
+console.log("1",path.join(__dirname, "assets/images"))
+console.log("2",path.resolve('./assets/images'))
+
 app.use(express.static(path.resolve('./assets/images')));
 
 app.use(express.static('assets'));
