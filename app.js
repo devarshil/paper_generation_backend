@@ -43,8 +43,10 @@ mkdirSync(UPLOADS_DIR, { recursive: true });
 
 const app = express();
 
-// Set up static middleware for serving images
-app.use("/uploads", express.static(path.join(__dirname, "assets/images")));
+// // Set up static middleware for serving images
+// app.use("/uploads", express.static(path.join(__dirname, "assets/images")));
+
+app.use(express.static(path.resolve('./assets/images')));
 
 app.use(express.static('assets'));
 
