@@ -18,39 +18,28 @@ class SubjectService extends BaseService {
     }
 
     async getAllSubjects() {
-        const page = parseInt(this.reqQuery.page) || 1;
-        const limit = parseInt(this.reqQuery.limit) || 10;
-        const startIndex = (page - 1) * limit;
-
-        let query = { deleted_at: null };
-
+        const query = { deleted_at: null };
+    
         const semester = parseInt(this.reqQuery.semester);
         const standard = parseInt(this.reqQuery.standard);
-
+    
         if (!isNaN(semester) || !isNaN(standard)) {
-            query = {
-                deleted_at: null,
-                $and: [
-                    !isNaN(semester) ? { sem: semester } : null,
-                    !isNaN(standard) ? { std: standard } : null,
-                ].filter(Boolean),
-            };
+            query.$and = [
+                !isNaN(semester) ? { sem: semester } : null,
+                !isNaN(standard) ? { std: standard } : null,
+            ].filter(Boolean);
         }
-        const subjects = await SubjectModel.find(query)
-            .skip(startIndex)
-            .limit(limit);
-
-        const total = await SubjectModel.countDocuments(query);
-
+    
+        const subjects = await SubjectModel.find(query);
+    
+        const total = subjects.length;
+    
         const data = {
             subjects,
             total,
-            currentPage: page,
-            per_page: limit,
-            totalPages: Math.ceil(total / limit),
         };
-
-        return data
+    
+        return data;
     }
 
     async getSubject(subjectId) {

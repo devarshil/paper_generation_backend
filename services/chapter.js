@@ -20,16 +20,12 @@ class ChapterService extends BaseService {
 
     async getAllChapters() {
 
-        const page = parseInt(this.reqQuery.page) || 1;
-        const limit = parseInt(this.reqQuery.limit) || 10;
-        const startIndex = (page - 1) * limit;
-
         let query = { deleted_at: null };
-
+    
         const semester = parseInt(this.reqQuery.semester);
         const standard = parseInt(this.reqQuery.standard);
-        const subject = this.reqQuery.subject
-
+        const subject = this.reqQuery.subject;
+    
         if (!isNaN(semester) || !isNaN(standard) || subject) {
             query = {
                 deleted_at: null,
@@ -40,23 +36,19 @@ class ChapterService extends BaseService {
                 ].filter(Boolean),
             };
         }
-
-        const chapters = await ChapterModel.find(query)
-            .skip(startIndex)
-            .limit(limit);
-
+    
+        const chapters = await ChapterModel.find(query);
+    
         const total = await ChapterModel.countDocuments(query);
-
+    
         const data = {
             chapters,
             total,
-            currentPage: page,
-            per_page: limit,
-            totalPages: Math.ceil(total / limit),
         };
-
-        return data
+    
+        return data;
     }
+    
 
     async getChapter(chapterId) {
 
