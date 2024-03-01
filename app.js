@@ -35,6 +35,7 @@ const cors = require("cors");
 const appRouter = require("./routes");
 const { mkdirSync } = require("fs");
 const { UPLOADS_DIR, IMAGE_DIR } = require("./config");
+const path = require('path')
 
 connectDB();
 
@@ -43,7 +44,8 @@ mkdirSync(UPLOADS_DIR, { recursive: true });
 const app = express();
 
 // Set up static middleware for serving images
-app.use("/uploads", express.static(UPLOADS_DIR));
+app.use("/uploads", express.static(path.join(__dirname, "assets/images")));
+
 app.use(express.static('assets'));
 
 app.use(cors());
