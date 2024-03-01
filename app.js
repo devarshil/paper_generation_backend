@@ -50,8 +50,8 @@ console.log("Script is running...");
 console.log("UPLOADS_DIR:", UPLOADS_DIR);
 console.log("IMAGE_DIR:", IMAGE_DIR);
 
-app.use(express.static(path.resolve('./assets/images')));
-
+// app.use(express.static(path.resolve('./assets/images')));
+app.use(express.static(path.resolve('D:/paper ganration app final/assets/images')));
 app.use(express.static('assets'));
 
 app.use(cors());
