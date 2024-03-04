@@ -48,20 +48,6 @@ class SubjectService extends BaseService {
         return subject
     }
 
-    // async updateSubject(subjectId, file) {
-
-    //     if (file && file.filename) {
-    //         return SubjectModel.findByIdAndUpdate(subjectId, {
-    //             ...this.reqBody,
-    //             icon: file.filename
-    //         }, {new: true});
-    //     } else {
-    //         return SubjectModel.findByIdAndUpdate(subjectId,
-    //             this.reqBody
-    //             , {new: true});
-    //     }
-    // }
-
     async updateSubject(subjectId, file) {
         try {
             if (file && file.buffer) {

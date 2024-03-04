@@ -81,20 +81,6 @@ subjectRouter.get("/:id", handleException(async (req, res) => {
     }
 }));
 
-// subjectRouter.put("/:id", upload.single("icon"), handleException(async (req, res) => {
-//     try {
-//         const subjectId = req.params.id;
-//         const subServ = new SubjectService(req.body, req.user, req.query);
-//         const file = req.file
-//         const data = await subServ.updateSubject(subjectId, file);
-
-//         res.status(200).json({ data, message: 'Subject updated successfully.' });
-
-//     } catch (error) {
-//         res.status(500).json({ error: error.message });
-//     }
-// }));
-
 subjectRouter.put("/:id", upload.single("icon"), handleException(async (req, res) => {
     try {
         const subjectId = req.params.id;

@@ -2,10 +2,13 @@ const Joi = require("joi");
 const multer = require("multer");
 const handleException = require("../decorators/error");
 const QuestionService = require("../services/question");
+// Multer configuration for handling file uploads
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+
 const questionRouter = require("express").Router()
 const QuestionModel = require("../models/question");
+const { uploadFile } = require("../helpers/avatar");
 
 
 const CreateQuestionRequest = Joi.object({
@@ -26,18 +29,34 @@ questionRouter.post("/", upload.single("image_url"), handleException(async (req,
     try {
         const reqBody = await CreateQuestionRequest.validateAsync(req.body);
         const queServ = new QuestionService(reqBody, req.user, req.query);
-        const file = req.file
-        const data = await queServ.addQuestion(file);
 
-        res.json({
-            data,
-            status: 200,
-            message: "Question created Successfully."
-        });
+        if (req.file && req.file.buffer) {
+            try {
+                const result = await uploadFile(req.file.buffer);
+                const data = await queServ.addQuestion(result);
 
+                res.json({
+                    data,
+                    status: 200,
+                    message: "Subject created Successfully."
+                });
+            } catch (uploadError) {
+                if (uploadError.message === "File size exceeds the maximum allowed limit.") {
+                    return res.status(400).json({ error: "File size exceeds the maximum allowed limit." });
+                }
+                throw uploadError;
+            }
+        } else {
+            const data = await queServ.addQuestion(); 
+            res.json({
+                data,
+                status: 200,
+                message: "Subject created Successfully."
+            });
+        }
     } catch (error) {
         console.error(error);
-        res.status(500).json({error: "Internal Server Error"});
+        res.status(500).json({ error: "Internal Server Error" });
     }
 }));
 
@@ -53,7 +72,7 @@ questionRouter.get("/", handleException(async (req, res) => {
 
     } catch (error) {
         console.error(error);
-        res.status(500).json({error: "Internal Server Error"});
+        res.status(500).json({ error: "Internal Server Error" });
     }
 }));
 
@@ -70,7 +89,7 @@ questionRouter.get("/:id", handleException(async (req, res) => {
 
     } catch (error) {
         console.error(error);
-        res.status(500).json({error: "Internal Server Error"});
+        res.status(500).json({ error: "Internal Server Error" });
     }
 }));
 
@@ -81,10 +100,10 @@ questionRouter.put("/:id", upload.single("image_url"), handleException(async (re
         const file = req.file
         const data = await queServ.updateQuestion(questionId, file);
 
-        res.status(200).json({data, message: 'Question updated successfully.'});
+        res.status(200).json({ data, message: 'Question updated successfully.' });
 
     } catch (error) {
-        res.status(500).json({error: error.message});
+        res.status(500).json({ error: error.message });
     }
 }));
 
@@ -92,12 +111,12 @@ questionRouter.delete("/:id", handleException(async (req, res) => {
     try {
         const questionId = req.params.id;
 
-        const question = await QuestionModel.findByIdAndUpdate(questionId, {deleted_at: new Date()}, {new: true});
+        const question = await QuestionModel.findByIdAndUpdate(questionId, { deleted_at: new Date() }, { new: true });
 
-        res.status(200).json({question, message: 'Question deleted successfully.'});
+        res.status(200).json({ question, message: 'Question deleted successfully.' });
 
     } catch (error) {
-        res.status(500).json({error: error.message});
+        res.status(500).json({ error: error.message });
     }
 }))
 

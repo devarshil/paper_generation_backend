@@ -1,20 +1,23 @@
 const BaseService = require(".");
+const { uploadFile } = require("../helpers/avatar");
 const QuestionModel = require('../models/question')
 
 class QuestionService extends BaseService {
-    async addQuestion(file) {
-
-        const dbQue = new QuestionModel(this.reqBody)
-
-        if(file && file.filename){
-            dbQue.image_url = file.filename;
+    async addQuestion(result) {
+    
+        let dbQue;
+    
+        if (result) {
+            dbQue = new QuestionModel({ ...this.reqBody, image_url: result });
+        } else {
+            dbQue = new QuestionModel(this.reqBody);
         }
-
+    
         const question = await dbQue.save();
-
+    
         return question;
     }
-
+  
     async getAllQuestions() {
 
         const page = parseInt(this.reqQuery.page) || 1;
@@ -75,10 +78,12 @@ class QuestionService extends BaseService {
 
     async updateQuestion(questionId, file) {
 
-        if (file && file.filename) {
+        if (file && file.buffer) {
+            const imageUrl = await uploadFile(file.buffer);
+
             return QuestionModel.findByIdAndUpdate(questionId, {
                 ...this.reqBody,
-                image_url: file.filename
+                image_url: imageUrl
             }, {new: true});
         } else {
             return QuestionModel.findByIdAndUpdate(questionId,
