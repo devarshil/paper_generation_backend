@@ -10,7 +10,14 @@ connectDB()
 mkdirSync(UPLOADS_DIR, { recursive: true });
 
 const app = express();
-app.use(cors());
+// app.use(cors());
+const corsConfig = {
+    origin: '',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE']
+}
+app.use(cors(corsConfig))
+app.options("", cors(corsConfig))
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
 app.use("/uploads", express.static(UPLOADS_DIR));
