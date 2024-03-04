@@ -16,7 +16,11 @@ const uploadFile = async (fileBuffer) => {
         }
 
         return new Promise((resolve, reject) => {
-            cloudinary.uploader.upload_stream({}, (error, result) => {
+            const uploadOptions = {
+                folder: "paper-ganration-app",
+              };
+          
+            cloudinary.uploader.upload_stream(uploadOptions, (error, result) => {
                 if (error) {
                     reject(error.message);
                 } else {
