@@ -1,9 +1,12 @@
 const Joi = require("joi");
+const multer = require("multer");
 const handleException = require("../decorators/error");
 const QuestionService = require("../services/question");
-const {upload} = require("../helpers/avatar");
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 const questionRouter = require("express").Router()
-const QuestionModel = require("../models/question")
+const QuestionModel = require("../models/question");
+
 
 const CreateQuestionRequest = Joi.object({
     title: Joi.string().required(),

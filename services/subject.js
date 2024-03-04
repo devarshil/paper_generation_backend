@@ -1,19 +1,11 @@
 const BaseService = require(".");
+const { uploadFile } = require("../helpers/avatar");
 const SubjectModel = require('../models/subject')
-
 class SubjectService extends BaseService {
-    async addSubject(file) {
 
-        // const isExist = await SubjectModel.findOne({name: this.reqBody.name})
-        //
-        // if (isExist) {
-        //     throw new Error("Subject with that name already exist.");
-        // }
-
-        const dbSub = new SubjectModel({...this.reqBody, icon: file?.filename || ""})
-
+    async addSubject(result) {
+        const dbSub = new SubjectModel({...this.reqBody, icon: result});
         const subject = await dbSub.save();
-
         return subject;
     }
 
@@ -56,26 +48,41 @@ class SubjectService extends BaseService {
         return subject
     }
 
-    async updateSubject(subjectId, file) {
+    // async updateSubject(subjectId, file) {
 
-        if (file && file.filename) {
-            return SubjectModel.findByIdAndUpdate(subjectId, {
-                ...this.reqBody,
-                icon: file.filename
-            }, {new: true});
-        } else {
-            return SubjectModel.findByIdAndUpdate(subjectId,
-                this.reqBody
-                , {new: true});
+    //     if (file && file.filename) {
+    //         return SubjectModel.findByIdAndUpdate(subjectId, {
+    //             ...this.reqBody,
+    //             icon: file.filename
+    //         }, {new: true});
+    //     } else {
+    //         return SubjectModel.findByIdAndUpdate(subjectId,
+    //             this.reqBody
+    //             , {new: true});
+    //     }
+    // }
+
+    async updateSubject(subjectId, file) {
+        try {
+            if (file && file.buffer) {
+                const imageUrl = await uploadFile(file.buffer);
+                
+                return SubjectModel.findByIdAndUpdate(subjectId, {
+                    ...this.reqBody,
+                    icon: imageUrl,
+                    updated_at: new Date()
+                }, { new: true });
+            } else {
+                return SubjectModel.findByIdAndUpdate(subjectId, {
+                    ...this.reqBody,
+                    updated_at: new Date()
+                }, { new: true });
+            }
+        } catch (error) {
+            throw new Error("Error updating subject: " + error.message);
         }
     }
 
-    async uploadSubjectIcon(subjectId, file) {
-
-        const icon = await SubjectModel.findByIdAndUpdate(subjectId, { icon: file.filename }, { new: true });
-
-        return icon
-    }
 }
 
 module.exports = SubjectService;
