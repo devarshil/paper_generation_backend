@@ -1,15 +1,14 @@
-
 const BaseService = require(".");
 const ChapterModel = require('../models/chapter')
 
 class ChapterService extends BaseService {
     async addChapter() {
 
-        const isExist = await ChapterModel.findOne({name: this.reqBody.name, deleted_at: null})
+        // const isExist = await ChapterModel.findOne({name: this.reqBody.name, deleted_at: null})
 
-        if (isExist) {
-            throw new Error("Chapter with that name already exist.");
-        }
+        // if (isExist) {
+        //     throw new Error("Chapter with that name already exist.");
+        // }
 
         const dbChapter = new ChapterModel(this.reqBody)
 
@@ -17,6 +16,28 @@ class ChapterService extends BaseService {
 
         return chapter;
     }
+
+    // async addChapter() {
+    //     const isExist = await ChapterModel.findOne({
+    //         std: this.reqBody.std,
+    //         sub: this.reqBody.sub,
+    //         name: this.reqBody.name,
+    //         deleted_at: null
+    //     });
+
+    //     if (isExist) {
+
+    //         const isSameSemester = isExist.sem === this.reqBody.sem;
+
+    //         if (isSameSemester) {
+    //             throw new Error("Chapter with the same name, subject, and standard already exists in the same semester.");
+    //         }
+    //     }
+
+    //     const dbChapter = new ChapterModel(this.reqBody);
+    //     const chapter = await dbChapter.save();
+    //     return chapter;
+    // }
 
     async getAllChapters() {
 

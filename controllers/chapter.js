@@ -6,7 +6,7 @@ const ChapterModel = require("../models/chapter")
 
 const CreateChapterRequest = Joi.object({
     name: Joi.string().required(),
-    std: Joi.number().required(),
+    std: Joi.number().integer().min(1).max(12).required(),
     sem: Joi.number().required(),
     sub: Joi.string().required(),
     isLocked: Joi.boolean().required(),
